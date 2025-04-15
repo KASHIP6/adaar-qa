@@ -259,9 +259,156 @@ transition: width 0.2s, height 0.2s, opacity 0.2s;
 
     .contact-pattern {
         background-color: #192b34;
+}
+
+/* Dot Spinner Loader */
+.dot-spinner {
+  --uib-size: 2.8rem;
+  --uib-speed: .9s;
+  --uib-color: rgb(98 174 209 / 50%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: var(--uib-size);
+  width: var(--uib-size);
+}
+
+.dot-spinner__dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  width: 100%;
+}
+
+.dot-spinner__dot::before {
+  content: '';
+  height: 20%;
+  width: 20%;
+  border-radius: 50%;
+  background-color: var(--uib-color);
+  transform: scale(0);
+  opacity: 0.5;
+  animation: pulse0112 calc(var(--uib-speed) * 1.111) ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(98, 174, 209, 0.3);
+}
+
+.dot-spinner__dot:nth-child(2) {
+  transform: rotate(45deg);
+}
+
+.dot-spinner__dot:nth-child(2)::before {
+  animation-delay: calc(var(--uib-speed) * -0.875);
+}
+
+.dot-spinner__dot:nth-child(3) {
+  transform: rotate(90deg);
+}
+
+.dot-spinner__dot:nth-child(3)::before {
+  animation-delay: calc(var(--uib-speed) * -0.75);
+}
+
+.dot-spinner__dot:nth-child(4) {
+  transform: rotate(135deg);
+}
+
+.dot-spinner__dot:nth-child(4)::before {
+  animation-delay: calc(var(--uib-speed) * -0.625);
+}
+
+.dot-spinner__dot:nth-child(5) {
+  transform: rotate(180deg);
+}
+
+.dot-spinner__dot:nth-child(5)::before {
+  animation-delay: calc(var(--uib-speed) * -0.5);
+}
+
+.dot-spinner__dot:nth-child(6) {
+  transform: rotate(225deg);
+}
+
+.dot-spinner__dot:nth-child(6)::before {
+  animation-delay: calc(var(--uib-speed) * -0.375);
+}
+
+.dot-spinner__dot:nth-child(7) {
+  transform: rotate(270deg);
+}
+
+.dot-spinner__dot:nth-child(7)::before {
+  animation-delay: calc(var(--uib-speed) * -0.25);
+}
+
+.dot-spinner__dot:nth-child(8) {
+  transform: rotate(315deg);
+}
+
+.dot-spinner__dot:nth-child(8)::before {
+  animation-delay: calc(var(--uib-speed) * -0.125);
+}
+
+@keyframes pulse0112 {
+  0%,
+  100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(25, 43, 52, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.loading-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.loading-overlay .dot-spinner {
+  --uib-size: 3.5rem;
+  --uib-color: rgb(98 174 209);
+}
 </style>
 </head>
 <body>
+<!-- Loading Overlay -->
+<div class="loading-overlay">
+    <div class="dot-spinner">
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+    </div>
+</div>
+
 <!-- Cursor Trail -->
 <div class="cursor-trail hidden"></div>
 <!-- Header & Navigation -->
@@ -1421,235 +1568,257 @@ contact@aptownship.com
 </button>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-// Slider functionality
-const sliderWrapper = document.querySelector('.slider-wrapper');
-const slides = document.querySelectorAll('.slide');
-const dots = document.querySelectorAll('.slider-dot');
-const prevButton = document.getElementById('prevSlide');
-const nextButton = document.getElementById('nextSlide');
-let currentSlide = 0;
-const slideCount = slides.length;
-let autoSlideInterval;
-function updateSlider(instant = false) {
-if (instant) {
-sliderWrapper.style.transition = 'none';
-} else {
-sliderWrapper.style.transition = 'transform 0.5s ease';
-}
-sliderWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
-dots.forEach((dot, index) => {
-const actualIndex = index;
-dot.classList.toggle('bg-white', actualIndex === (currentSlide % slideCount));
-dot.classList.toggle('bg-white/50', actualIndex !== (currentSlide % slideCount));
-});
-}
-function nextSlide() {
-currentSlide++;
-updateSlider();
-if (currentSlide % slideCount === 0) {
-setTimeout(() => {
-currentSlide = 0;
-updateSlider(true);
-}, 500);
-}
-}
-function prevSlide() {
-if (currentSlide === 0) {
-currentSlide = slideCount;
-updateSlider(true);
-setTimeout(() => {
-currentSlide--;
-updateSlider();
-}, 0);
-} else {
-currentSlide--;
-updateSlider();
-}
-}
-function startAutoSlide() {
-autoSlideInterval = setInterval(nextSlide, 5000);
-}
-function stopAutoSlide() {
-clearInterval(autoSlideInterval);
-}
-// Event listeners for slider controls
-prevButton.addEventListener('click', () => {
-prevSlide();
-stopAutoSlide();
-startAutoSlide();
-});
-nextButton.addEventListener('click', () => {
-nextSlide();
-stopAutoSlide();
-startAutoSlide();
-});
-dots.forEach((dot, index) => {
-dot.addEventListener('click', () => {
-currentSlide = index;
-updateSlider();
-stopAutoSlide();
-startAutoSlide();
-});
-});
-// Start auto-sliding
-startAutoSlide();
-// Pause auto-sliding when hovering over slider
-sliderWrapper.addEventListener('mouseenter', stopAutoSlide);
-sliderWrapper.addEventListener('mouseleave', startAutoSlide);
-// Header scroll effect
-const header = document.querySelector('header');
-window.addEventListener('scroll', function() {
-if (window.scrollY > 50) {
-header.classList.add('py-2');
-header.classList.remove('py-4');
-} else {
-header.classList.add('py-4');
-header.classList.remove('py-2');
-}
-});
-// Mobile menu toggle
-const mobileMenuButton = document.getElementById('mobile-menu-button');
-const mobileMenu = document.getElementById('mobile-menu');
-mobileMenuButton.addEventListener('click', function() {
-mobileMenu.classList.toggle('hidden');
-if (mobileMenu.classList.contains('hidden')) {
-mobileMenuButton.innerHTML = '<i class="ri-menu-line ri-lg"></i>';
-} else {
-mobileMenuButton.innerHTML = '<i class="ri-close-line ri-lg"></i>';
-}
-});
-// Dropdown toggles
-const dropdowns = [
-{ button: 'property-type-dropdown', options: 'property-type-options' },
-{ button: 'price-range-dropdown', options: 'price-range-options' },
-{ button: 'interest-dropdown', options: 'interest-options' }
-];
-dropdowns.forEach(dropdown => {
-const button = document.getElementById(dropdown.button);
-const options = document.getElementById(dropdown.options);
-if (button && options) {
-button.addEventListener('click', function() {
-options.classList.toggle('hidden');
-});
-document.addEventListener('click', function(event) {
-if (!button.contains(event.target) && !options.contains(event.target)) {
-options.classList.add('hidden');
-}
-});
-if (options) {
-const optionItems = options.querySelectorAll('.cursor-pointer');
-optionItems.forEach(item => {
-item.addEventListener('click', function() {
-button.querySelector('span').textContent = this.textContent;
-options.classList.add('hidden');
-});
-});
-}
-}
-});
-// Price range slider
-const priceRangeSlider = document.getElementById('price-range-slider');
-const priceRangeValue = document.getElementById('price-range-value');
-if (priceRangeSlider && priceRangeValue) {
-priceRangeSlider.addEventListener('input', function() {
-const value = this.value;
-const formattedValue = value >= 1000000 ?
-`$${(value / 1000000).toFixed(1)}M` :
-`$${(value / 1000).toFixed(0)}k`;
-priceRangeValue.textContent = formattedValue;
-});
-}
-// Tab switching
-const tabButtons = document.querySelectorAll('.tab-button');
-tabButtons.forEach(button => {
-button.addEventListener('click', function() {
-tabButtons.forEach(btn => btn.classList.remove('active'));
-this.classList.add('active');
-});
-});
-// Counter animation
-const counters = document.querySelectorAll('.counter');
-const counterObserver = new IntersectionObserver((entries, observer) => {
-entries.forEach(entry => {
-if (entry.isIntersecting) {
-const counter = entry.target;
-const target = parseInt(counter.getAttribute('data-target'));
-let count = 0;
-const updateCounter = () => {
-const increment = target / 50;
-if (count < target) {
-count += increment;
-counter.textContent = Math.ceil(count);
-setTimeout(updateCounter, 30);
-} else {
-counter.textContent = target;
-}
-};
-updateCounter();
-observer.unobserve(counter);
-}
-});
-}, { threshold: 0.5 });
-counters.forEach(counter => {
-counterObserver.observe(counter);
-});
-// Back to top button
-const backToTopButton = document.getElementById('back-to-top');
-window.addEventListener('scroll', function() {
-if (window.scrollY > 500) {
-backToTopButton.classList.remove('opacity-0', 'invisible');
-backToTopButton.classList.add('opacity-100', 'visible');
-} else {
-backToTopButton.classList.add('opacity-0', 'invisible');
-backToTopButton.classList.remove('opacity-100', 'visible');
-}
-});
-backToTopButton.addEventListener('click', function() {
-window.scrollTo({
-top: 0,
-behavior: 'smooth'
-});
-});
-// Smooth scroll for navigation links
-const navLinks = document.querySelectorAll('a[href^="#"]');
-navLinks.forEach(link => {
-link.addEventListener('click', function(e) {
-e.preventDefault();
-const targetId = this.getAttribute('href');
-if (targetId === '#') return;
-const targetElement = document.querySelector(targetId);
-if (targetElement) {
-const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset;
-window.scrollTo({
-top: offsetTop,
-behavior: 'smooth'
-});
-// Close mobile menu if open
-if (!mobileMenu.classList.contains('hidden')) {
-mobileMenu.classList.add('hidden');
-mobileMenuButton.innerHTML = '<i class="ri-menu-line ri-lg"></i>';
-}
-}
-});
-});
-// Cursor trail effect
-const cursorTrail = document.querySelector('.cursor-trail');
-const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-if (!isTouchDevice && cursorTrail) {
-cursorTrail.classList.remove('hidden');
-document.addEventListener('mousemove', function(e) {
-cursorTrail.style.left = e.clientX + 'px';
-cursorTrail.style.top = e.clientY + 'px';
-});
-document.addEventListener('mousedown', function() {
-cursorTrail.style.transform = 'translate(-50%, -50%) scale(1.5)';
-cursorTrail.style.opacity = '0.9';
-});
-document.addEventListener('mouseup', function() {
-cursorTrail.style.transform = 'translate(-50%, -50%) scale(1)';
-cursorTrail.style.opacity = '0.7';
-});
-}
+    // Show loading overlay initially
+    const loadingOverlay = document.querySelector('.loading-overlay');
+    loadingOverlay.classList.add('active');
+
+    // Hide loading overlay after page is fully loaded
+    window.addEventListener('load', function() {
+        loadingOverlay.classList.remove('active');
+    });
+
+    // Show loading overlay during page transitions
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (targetId !== '#') {
+                loadingOverlay.classList.add('active');
+                setTimeout(() => {
+                    loadingOverlay.classList.remove('active');
+                }, 500);
+            }
+        });
+    });
+
+    // Slider functionality
+    const sliderWrapper = document.querySelector('.slider-wrapper');
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.slider-dot');
+    const prevButton = document.getElementById('prevSlide');
+    const nextButton = document.getElementById('nextSlide');
+    let currentSlide = 0;
+    const slideCount = slides.length;
+    let autoSlideInterval;
+    function updateSlider(instant = false) {
+        if (instant) {
+            sliderWrapper.style.transition = 'none';
+        } else {
+            sliderWrapper.style.transition = 'transform 0.5s ease';
+        }
+        sliderWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+        dots.forEach((dot, index) => {
+            const actualIndex = index;
+            dot.classList.toggle('bg-white', actualIndex === (currentSlide % slideCount));
+            dot.classList.toggle('bg-white/50', actualIndex !== (currentSlide % slideCount));
+        });
+    }
+    function nextSlide() {
+        currentSlide++;
+        updateSlider();
+        if (currentSlide % slideCount === 0) {
+            setTimeout(() => {
+                currentSlide = 0;
+                updateSlider(true);
+            }, 500);
+        }
+    }
+    function prevSlide() {
+        if (currentSlide === 0) {
+            currentSlide = slideCount;
+            updateSlider(true);
+            setTimeout(() => {
+                currentSlide--;
+                updateSlider();
+            }, 0);
+        } else {
+            currentSlide--;
+            updateSlider();
+        }
+    }
+    function startAutoSlide() {
+        autoSlideInterval = setInterval(nextSlide, 5000);
+    }
+    function stopAutoSlide() {
+        clearInterval(autoSlideInterval);
+    }
+    // Event listeners for slider controls
+    prevButton.addEventListener('click', () => {
+        prevSlide();
+        stopAutoSlide();
+        startAutoSlide();
+    });
+    nextButton.addEventListener('click', () => {
+        nextSlide();
+        stopAutoSlide();
+        startAutoSlide();
+    });
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentSlide = index;
+            updateSlider();
+            stopAutoSlide();
+            startAutoSlide();
+        });
+    });
+    // Start auto-sliding
+    startAutoSlide();
+    // Pause auto-sliding when hovering over slider
+    sliderWrapper.addEventListener('mouseenter', stopAutoSlide);
+    sliderWrapper.addEventListener('mouseleave', startAutoSlide);
+    // Header scroll effect
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+            header.classList.add('py-2');
+            header.classList.remove('py-4');
+        } else {
+            header.classList.add('py-4');
+            header.classList.remove('py-2');
+        }
+    });
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+        if (mobileMenu.classList.contains('hidden')) {
+            mobileMenuButton.innerHTML = '<i class="ri-menu-line ri-lg"></i>';
+        } else {
+            mobileMenuButton.innerHTML = '<i class="ri-close-line ri-lg"></i>';
+        }
+    });
+    // Dropdown toggles
+    const dropdowns = [
+        { button: 'property-type-dropdown', options: 'property-type-options' },
+        { button: 'price-range-dropdown', options: 'price-range-options' },
+        { button: 'interest-dropdown', options: 'interest-options' }
+    ];
+    dropdowns.forEach(dropdown => {
+        const button = document.getElementById(dropdown.button);
+        const options = document.getElementById(dropdown.options);
+        if (button && options) {
+            button.addEventListener('click', function() {
+                options.classList.toggle('hidden');
+            });
+            document.addEventListener('click', function(event) {
+                if (!button.contains(event.target) && !options.contains(event.target)) {
+                    options.classList.add('hidden');
+                }
+            });
+            if (options) {
+                const optionItems = options.querySelectorAll('.cursor-pointer');
+                optionItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        button.querySelector('span').textContent = this.textContent;
+                        options.classList.add('hidden');
+                    });
+                });
+            }
+        }
+    });
+    // Price range slider
+    const priceRangeSlider = document.getElementById('price-range-slider');
+    const priceRangeValue = document.getElementById('price-range-value');
+    if (priceRangeSlider && priceRangeValue) {
+        priceRangeSlider.addEventListener('input', function() {
+            const value = this.value;
+            const formattedValue = value >= 1000000 ?
+                `$${(value / 1000000).toFixed(1)}M` :
+                `$${(value / 1000).toFixed(0)}k`;
+            priceRangeValue.textContent = formattedValue;
+        });
+    }
+    // Tab switching
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+    // Counter animation
+    const counters = document.querySelectorAll('.counter');
+    const counterObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                const target = parseInt(counter.getAttribute('data-target'));
+                let count = 0;
+                const updateCounter = () => {
+                    const increment = target / 50;
+                    if (count < target) {
+                        count += increment;
+                        counter.textContent = Math.ceil(count);
+                        setTimeout(updateCounter, 30);
+                    } else {
+                        counter.textContent = target;
+                    }
+                };
+                updateCounter();
+                observer.unobserve(counter);
+            }
+        });
+    }, { threshold: 0.5 });
+    counters.forEach(counter => {
+        counterObserver.observe(counter);
+    });
+    // Back to top button
+    const backToTopButton = document.getElementById('back-to-top');
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 500) {
+            backToTopButton.classList.remove('opacity-0', 'invisible');
+            backToTopButton.classList.add('opacity-100', 'visible');
+        } else {
+            backToTopButton.classList.add('opacity-0', 'invisible');
+            backToTopButton.classList.remove('opacity-100', 'visible');
+        }
+    });
+    backToTopButton.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+    // Smooth scroll for navigation links
+    const navLinks = document.querySelectorAll('a[href^="#"]');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+                // Close mobile menu if open
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuButton.innerHTML = '<i class="ri-menu-line ri-lg"></i>';
+                }
+            }
+        });
+    });
+    // Cursor trail effect
+    const cursorTrail = document.querySelector('.cursor-trail');
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (!isTouchDevice && cursorTrail) {
+        cursorTrail.classList.remove('hidden');
+        document.addEventListener('mousemove', function(e) {
+            cursorTrail.style.left = e.clientX + 'px';
+            cursorTrail.style.top = e.clientY + 'px';
+        });
+        document.addEventListener('mousedown', function() {
+            cursorTrail.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            cursorTrail.style.opacity = '0.9';
+        });
+        document.addEventListener('mouseup', function() {
+            cursorTrail.style.transform = 'translate(-50%, -50%) scale(1)';
+            cursorTrail.style.opacity = '0.7';
+        });
+    }
 });
 function toggleAccordion(id) {
     const content = document.getElementById(id);
@@ -1677,6 +1846,7 @@ function toggleAccordion(id) {
         icon.style.transform = 'rotate(0deg)';
     }
 }
+});
 </script>
 </body>
 </html>
