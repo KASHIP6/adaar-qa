@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AP Township - Futuristic Real Estate</title>
+<title>AP Township</title>
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
 <script>tailwind.config={theme:{extend:{colors:{primary:'#62aed1',secondary:'#192b34'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,12 +11,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<!-- globe png -->
+<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-title" content="adaar" />
+<link rel="manifest" href="/site.webmanifest" />
 <style>
 :where([class^="ri-"])::before { content: "\f3c2"; }
 body {
 font-family: 'Poppins', sans-serif;
 scroll-behavior: smooth;
 background-color: #ffffff;
+}
+.nav-logo{
+    height: 80px;
 }
 .glassmorphic {
 background: rgba(255, 255, 255, 0.1);
@@ -268,7 +278,8 @@ transition: width 0.2s, height 0.2s, opacity 0.2s;
 <header class="fixed w-full z-50 transition-all duration-300">
 <nav class="glassmorphic px-6 py-4">
 <div class="container mx-auto flex justify-between items-center">
-<a href="#" class="text-3xl font-['Pacifico'] text-white floating">logo</a>
+<a href="#home"  >
+    <img src="logo.png" class="nav-logo"></a>
     <div class="hidden md:flex justify-center flex-1">
     <div class="flex space-x-8">
 <a href="#home" class="text-white hover:text-primary transition-all duration-300 relative group">
@@ -1353,7 +1364,8 @@ Bengaluru, Karnataka 560 105
 <div class="container mx-auto px-6">
 <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
 <div>
-<a href="#" class="text-3xl font-['Pacifico'] text-white mb-6 block">logo</a>
+    <a href="#home"  >
+        <img src="logo.png" class="nav-logo"></a>
 <p class="text-white/70 mb-6">AP Township is redefining luxury living with futuristic homes that combine cutting-edge technology, sustainable design, and premium amenities.</p>
 <div class="flex space-x-4">
 <a href="#" class="w-10 h-10 flex items-center justify-center bg-white/10 !rounded-full hover:bg-primary transition-all duration-300">
